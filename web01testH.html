@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documento</title>
+    <style>
+      * {
+        width: min-content;
+      }
+
+      button,
+      img {
+        cursor: pointer;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+      }
+
+      #test {
+        color: #e70606;
+      }
+
+      #img1 {
+        width: 300px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="test">imagen 1</button>
+    <img id="img1" src="images/img1.jpg" />
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#img1").mouseenter(function () {
+          $(this).attr("src", "images/img2.jfif");
+        });
+        $("#img1").mouseleave(function () {
+          $(this).attr("src", "images/img1.jpg");
+        });
+        $("#test").click(function () {
+          $(this).css("color", "black");
+          console.log($("#img1").attr("src"));
+
+          // Agregar p al Documento
+          //$("body").append("<p>Imagen actualizada</p>").css("color", "red");
+          //Toggle de imagenes imagenes/img1.jpg y imagenes/img2.jfif
+          if ($("#img1").attr("src") === "images/img1.jpg") {
+            $("#img1").attr("src", "images/img2.jfif");
+            $(this).text("imagen 2");
+          } else {
+            $("#img1").attr("src", "images/img1.jpg");
+            $(this).text("imagen 1");
+          }
+        });
+      });
+    </script>
+  </body>
+  <a href=""></a>
+</html>
