@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Filtros XML</h1>
+    <label>Introduzca su id</label>
+    <input type="text" id="cajaid" />
+    <button id="botonatributo">Buscar atributo ID</button>
+    <label>Introduzca localidad</label>
+    <input type="text" id="cajaLocalidad" />
+    <button id="botonLocalidad">Buscar localidad contains</button>
+    <hr />
+    <h1 style="color: fuchsia" id="mensaje"></h1>
+    <ul id="listadepartamentos"></ul>
+  </body>
+  <script src="js/jquery-3.7.1.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#botonatributo").click(function () {
+        $.get("documents/departamentos.xml", function (data) {
+          console.log("Leyendo...");
+          var id = $("#cajaid").val();
+          var filtro = `DEPT[DEPT_NO=${id}]`;
+          var nododept = $(data).find(filtro).first();
+          var nombre = $(nododept).find("DNOMBRE").text();
+          var localidad = $(nododept).find("LOC").text();
+          $("#mensaje").text(`Departamento: ${nombre}, Localidad ${localidad}`);
+        });
+      });
+
+      $("#botonLocalidad").click(function () {
+        $.get("documents/departamentos.xml", function (data) {
+          //console.log("Leyendo...");
+          var cajaLocalidad = $("#cajaLocalidad").val();
+          var filtro = `LOC:contains(${cajaLocalidad})`;
+          $(data).find(filtro).length > 0
+            ? $(data)
+                .find(filtro)
+                .each(function () {
+                  var cosa = $(this).text();
+                  console.log($(this).text());
+                  var nodopadre = $(this).parent();
+                  var id = nodopadre.attr("DEPT_NO");
+                  var nombre = nodopadre.find("DNOMBRE").first().text();
+                  $("#listadepartamentos").append(
+                    `<li>Departamento: ${nombre} ID: ${id}</li>`
+                  );
+                })
+            : $("#mensaje").append(
+                `<li>No existe la localidad: ${cajaLocalidad}</li>`
+              );
+        });
+      });
+    });
+  </script>
+</html>

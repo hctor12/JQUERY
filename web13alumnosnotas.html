@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Alumnos notas XML</h1>
+    <label>Introduzca nota</label>
+    <input type="number" id="cajaNota" min="0" max="10" />
+    <button id="btnBuscar">Buscar alumnos</button>
+    <table id="tablaAlumnos">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellidos</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#btnBuscar").click(function () {
+          var notaCaja = parseInt($("#cajaNota").val());
+          $("#tablaAlumnos tbody").empty();
+
+          $.get("documents/alumnos.xml", function (data) {
+            $(data)
+              .find("alumno")
+              .each(function () {
+                var nombre = $(this).find("nombre").first().text();
+                var apellidos = $(this).find("apellidos").first().text();
+                var nota = $(this).find("nota").first().text();
+
+                if (parseInt(nota) >= notaCaja) {
+                  $("#tablaAlumnos tbody").append("<tr>");
+                  $("#tablaAlumnos tbody").append(`<td> ${nombre} </td>`);
+                  $("#tablaAlumnos tbody").append(`<td> ${apellidos} </td>`);
+                  $("#tablaAlumnos tbody").append(`<td> ${nota} </td>`);
+                  $("#tablaAlumnos tbody").append("</tr>");
+                }
+              });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

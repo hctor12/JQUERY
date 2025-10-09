@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Crud departamentos XML</h1>
+    <label>Id departamento</label>
+    <input type="text" id="cajaid" />
+    <label>Nombre</label>
+    <input type="text" id="cajanombre" />
+    <label>Localidad</label>
+    <input type="text" id="cajalocalidad" />
+    <button id="botoninsert">Insertar</button>
+    <button id="botonupdate">Modificar</button>
+    <button id="botondelete">Eliminar</button>
+    <button id="btnCargar">Cargar datos</button>
+    <table id="tablaDeps">
+      <thead>
+        <tr>
+          <th>Id departamento</th>
+          <th>Nombre</th>
+          <th>Localidad</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#btnCargar").click(function () {
+          loadDepartamentos();
+        });
+
+        $("#botoninsert").click(function () {
+          let id = parseInt($("#cajaid").val());
+          let nombre = $("#cajanombre").val();
+          let localidad = $("#cajalocalidad").val();
+
+          //GENERAR UN STRING CON LA MISMA ESTRUCTURA QUE EL DOCUMENTO XML PARA SUS REGISTROS
+          let dataXML = "<Departamento>";
+          dataXML += `<IdDepartamento>${id}</IdDepartamento>`;
+          dataXML += `<Nombre>${nombre}</Nombre>`;
+          dataXML += `<Localidad>${localidad}</Localidad>`;
+          dataXML += `</Departamento>`;
+
+          $.ajax({
+            url: "https://apicruddepartamentosxml.azurewebsites.net/api/Departamentos",
+            type: "POST",
+            contentType: "text/xml",
+            data: dataXML,
+            success: function () {
+              console.log("Insertado");
+              loadDepartamentos();
+            },
+          });
+        });
+
+        $("#botonupdate").click(function () {
+          let id = parseInt($("#cajaid").val());
+          let nombre = $("#cajanombre").val();
+          let localidad = $("#cajalocalidad").val();
+          let dataXML = getDepartamentoXML(id, nombre, localidad);
+          $.ajax({
+            url: "https://apicruddepartamentosxml.azurewebsites.net/api/Departamentos",
+            type: "PUT",
+            contentType: "text/xml",
+            data: dataXML,
+            success: function () {
+              console.log("Modificado");
+              loadDepartamentos();
+            },
+          });
+        });
+
+        $("#botondelete").click(function () {
+          let id = parseInt($("#cajaid").val());
+          $.ajax({
+            url: "https://apicruddepartamentosxml.azurewebsites.net/api/Departamentos/412",
+            type: "DELETE",
+            success: function () {
+              console.log("Eliminado");
+              loadDepartamentos();
+            },
+          });
+        });
+      });
+
+      function loadDepartamentos() {
+        $("#tablaDeps tbody").empty();
+        $.get(
+          "https://apicruddepartamentosxml.azurewebsites.net/api/Departamentos",
+          function (data) {
+            $(data)
+              .find("Departamento")
+              .each(function () {
+                var idDep = parseInt($(this).find("IdDepartamento").text());
+                var nombre = $(this).find("Nombre").text();
+                var loc = $(this).find("Localidad").text();
+
+                $("#tablaDeps tbody").append(`<tr>`);
+                $("#tablaDeps tbody").append(`<td>${idDep}</td>`);
+                $("#tablaDeps tbody").append(`<td>${nombre}</td>`);
+                $("#tablaDeps tbody").append(`<td>${loc}</td>`);
+                $("#tablaDeps tbody").append(`</td>`);
+              });
+          }
+        );
+      }
+
+      function getDepartamentoXML(id, nombre, localidad) {
+        // COPIAR EL CODIGO DE GENERACION DEL OBJETO XML
+
+        let dataXML = "<Departamento>";
+        dataXML += `<IdDepartamento>${id}</IdDepartamento>`;
+        dataXML += `<Nombre>${nombre}</Nombre>`;
+        dataXML += `<Localidad>${localidad}</Localidad>`;
+        dataXML += `</Departamento>`;
+        return dataXML;
+      }
+    </script>
+  </body>
+</html>

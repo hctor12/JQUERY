@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Crud departamentos JSON</h1>
+    <label for="cajaId">Id Departamento</label>
+    <input type="text" id="cajaId" name="cajaId" />
+    <label for="cajaNombre">Nombre</label>
+    <input type="text" id="cajaNombre" name="cajaNombre" />
+    <label for="cajaLocalidad">Localidad</label>
+    <input type="text" id="cajaLocalidad" name="cajaLocalidad" />
+    <button id="btnInsert">Insertar</button>
+    <button id="btnUpdate">Modificar</button>
+    <button id="btnDelete">Eliminar</button>
+    <table id="tablaDeps" border="1">
+      <thead>
+        <tr>
+          <th>Id departamento</th>
+          <th>Nombre</th>
+          <th>Localidad</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      const url = "https://apicruddepartamentoscore.azurewebsites.net";
+
+      $(document).ready(function () {
+        loadDeps();
+
+        $("#btnInsert").click(function () {
+          const request = "/api/Departamentos";
+          let idDep = parseInt($("#cajaId").val());
+          let nombre = $("#cajaNombre").val();
+          let loc = $("#cajaLocalidad").val();
+          console.log(getDep(idDep, nombre, loc));
+
+          $.ajax({
+            url: url + request,
+            method: "POST",
+            contentType: "application/json",
+            data: getDep(idDep, nombre, loc),
+            success: function () {
+              console.log("Insertado");
+              loadDeps();
+            },
+          });
+        });
+
+        $("#btnDelete").click(function () {
+          let idDep = parseInt($("#cajaId").val());
+          const request = `/api/Departamentos/${idDep}`;
+
+          $.ajax({
+            url: url + request,
+            method: "DELETE",
+            success: function () {
+              console.log("Eliminado");
+              loadDeps();
+            },
+          });
+        });
+
+        $("#btnUpdate").click(function () {
+          let nombre = $("#cajaNombre").val();
+          let loc = $("#cajaLocalidad").val();
+          const request = "/api/Departamentos/";
+
+          $.ajax({
+            url: url + request,
+            method: "PUT",
+            contentType: "application/json",
+            data: getDep(idDep, nombre, loc),
+            success: function () {
+              console.log("Modificado");
+              loadDeps();
+            },
+          });
+        });
+      });
+
+      function loadDeps() {
+        $("#tablaDeps tbody").empty();
+        const request = "/api/Departamentos";
+        $.getJSON(url + request, function (data) {
+          $.each(data, function (index, object) {
+            $("#tablaDeps tbody").append(`<tr>`);
+            $("#tablaDeps tbody").append(`<td>${object.numero}</td>`);
+            $("#tablaDeps tbody").append(`<td>${object.nombre}</td>`);
+            $("#tablaDeps tbody").append(`<td>${object.localidad}</td>`);
+            $("#tablaDeps tbody").append(`</tr>`);
+          });
+        });
+      }
+
+      function getDep(id, nombre, loc) {
+        let dep = new Object();
+        dep.numero = id;
+        dep.nombre = nombre;
+        dep.localidad = loc;
+
+        let dataJSON = JSON.stringify(dep);
+        return dataJSON;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        width: 300px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Clientes XML</h1>
+    <div id="contenedorBotones"></div>
+    <hr />
+    <div id="contenedorInfo"></div>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $.get(
+          "https://apiclientesxml.azurewebsites.net/api/Clientes/",
+          function (data) {
+            $(data)
+              .find("Cliente")
+              .each(function () {
+                var idCliente = parseInt($(this).find("IdCliente").text());
+                var nombre = $(this).find("Nombre").text();
+                var email = $(this).find("Email").text();
+                var paginaWeb = $(this).find("PaginaWeb").text();
+                var imagen = $(this).find("Imagen").text();
+                var boton = $(`<button id=${idCliente}>${nombre}</button>`);
+                $("#contenedorBotones").append(boton);
+
+                $(boton).click(function () {
+                  $("#contenedorInfo").empty();
+                  var id = parseInt($(this).attr("id"));
+                  //   $.get(
+                  //     `https://apiclientesxml.azurewebsites.net/api/Clientes/${id}`,
+                  //     function (data) {
+                  //var nombre = $(data).find("Nombre").text();
+                  //   var email = $(data).find("Email").text();
+                  //   var paginaWeb = $(data).find("PaginaWeb").text();
+                  //   var imagen = $(data).find("Imagen").text();
+
+                  $("#contenedorInfo").append(`<p>ID: ${id}</p>`);
+                  $("#contenedorInfo").append(`<p>Nombre: ${nombre}</p>`);
+                  $("#contenedorInfo").append(`<p>Email: ${email}</p>`);
+                  $("#contenedorInfo").append(
+                    `<p>Pagina Web: ${paginaWeb}</p>`
+                  );
+                  $("#contenedorInfo").append(`<img src="${imagen}"/>`);
+                  //     }
+                  //   );
+                });
+              });
+          }
+        );
+      });
+    </script>
+  </body>
+</html>

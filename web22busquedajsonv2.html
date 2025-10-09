@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Búsqueda Documento JSON</h1>
+    <label>Seleccione un jugador</label>
+    <select id="selectJugador"></select>
+    <div id="containerJugador"></div>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        loadJugadores();
+
+        $("#selectJugador").change(function () {
+          $("#containerJugador").empty();
+          let nombre = $("#selectJugador").val();
+          $.getJSON("documents/jugadores.json", function (data) {
+            let index = $("#selectJugador").val();
+            let player = data.jugadores[index];
+            let numero = player.numero;
+            let posicion = player.posicion;
+            let edad = player.edad;
+            let imagen = player.imagen;
+
+            $("#containerJugador").append(`<p>Número: ${numero}</p>`);
+            $("#containerJugador").append(`<p>Posición: ${posicion}</p>`);
+            $("#containerJugador").append(`<p>Edad: ${edad}</p>`);
+            $("#containerJugador").append(`<img src="${imagen}"></img>`);
+          });
+        });
+      });
+
+      function loadJugadores() {
+        $.getJSON("documents/jugadores.json", function (data) {
+          $.each(data.jugadores, function (index, object) {
+            let option = $(
+              `<option value="${index}">${object.nombre}</option>`
+            );
+            $("#selectJugador").append(option);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

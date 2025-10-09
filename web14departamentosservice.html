@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Departamentos XML Service</h1>
+    <label>Introduzca ID</label>
+    <input type="number" id="cajaDep" />
+    <button id="btnBuscar">Buscar departamento</button>
+    <table id="tabladeps">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Localidad</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#btnBuscar").click(function () {
+          $("#tabladeps tbody").empty();
+          $.get(
+            "https://apicruddepartamentosxml.azurewebsites.net/api/Departamentos",
+            function (data) {
+              $(data)
+                .find("Departamento")
+                .each(function () {
+                  var ID = parseInt($(this).find("IdDepartamento").text());
+                  var nombre = $(this).find("Nombre").text();
+                  var localidad = $(this).find("Localidad").text();
+                  if (parseInt($("#cajaDep").val()) === ID) {
+                    console.log(localidad);
+                    $("#tabladeps tbody").append("<tr>");
+                    $("#tabladeps tbody").append(`<td>${nombre}<td>`);
+                    $("#tabladeps tbody").append(`<td>${localidad}<td>`);
+                    $("#tabladeps tbody").append("</tr>");
+                  }
+                });
+            }
+          );
+        });
+      });
+    </script>
+  </body>
+</html>

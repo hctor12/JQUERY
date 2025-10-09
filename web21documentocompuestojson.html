@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Documento objetos JSON</h1>
+    <ul id="clientes"></ul>
+    <button id="botonLoad">Cargar documento</button>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#botonLoad").click(function () {
+          $.getJSON("documents/clientes.json", function (data) {
+            console.log("leyendo...");
+            $.each(data.clientes, function (index, object) {
+              $("#clientes").append(
+                `<li>Index: ${index}, Objeto: ${object.nombre}</li>`
+              );
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

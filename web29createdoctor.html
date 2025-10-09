@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="web29homedoctores.html">Práctica Final</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="web29homedoctores.html"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="web29createdoctor.html">New Doctor</a>
+              </li>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="card border-none" style="border: 0;">
+        <h5 class="card-header">New Doctor</h5>
+            <form>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="idDoctor">ID Doctor</label>
+      <input type="number" class="form-control" id="idDoctor" placeholder="ID Doctor">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="idHospital">ID Hospital</label>
+      <input type="number" class="form-control" id="idHospital" placeholder="ID Hospital">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="apellido">Apellido</label>
+    <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+  </div>
+  <div class="form-group">
+    <label for="Especialidad">Especialidad</label>
+    <input type="text" class="form-control" id="especialidad" placeholder="Especialidad">
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="salario">Salario</label>
+      <input type="number" class="form-control" id="salario">
+    </div>
+  </div>
+  <button class="btn btn-primary mt-2" id="btnAddDoctor">Añadir</button>
+</form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      const url = "https://apicruddoctores.azurewebsites.net/";
+
+      $(document).ready(function () {
+
+        $("#btnAddDoctor").click(function(e){
+            e.preventDefault();
+            let idDoctor = parseInt($("#idDoctor").val())
+            let idHospital = parseInt($("#idHospital").val())
+            let apellido = $("#apellido").val()
+            let especialidad = $("#especialidad").val()
+            let salario = parseInt($("#salario").val())
+
+            let doctor = new Object;
+            doctor.idDoctor = idDoctor;
+            doctor.idHospital = idHospital;
+            doctor.apellido = apellido;
+            doctor.especialidad = especialidad;
+            doctor.salario = salario;
+
+            let doctorJSON = JSON.stringify(doctor);
+            let request = "api/Doctores"
+
+            $.ajax({
+                url: url + request,
+                method: "POST",
+                contentType: "application/json",
+                data: doctorJSON,
+                success: function(){
+                    Swal.fire({
+                        customClass: {
+    confirmButton: "btn btn-success btnConfirm",
+  },
+                icon: "success",
+                title: "Creado correctamente",
+                text: "El doctor ha sido creado correctamente!",
+                });
+                $(".btnConfirm").on("click", function(){
+                    window.location.href = "web29homedoctores.html"
+                })
+                }
+            })
+        })
+      });
+    </script>
+  </body>
+</html>

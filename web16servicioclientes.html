@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Clientes Service</h1>
+    <label for="selectCliente">Selecciona cliente</label>
+    <select name="selectCliente" id="selectCliente"></select>
+    <div id="contenido"></div>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $.get(
+          "https://apiclientesxml.azurewebsites.net/api/Clientes/GetClientesXML",
+          function (data) {
+            $(data)
+              .find("CLIENTE")
+              .each(function () {
+                var idCliente = parseInt($(this).attr("IDCLIENTE"));
+                var nombre = $(this).find("NOMBRE").first().text();
+                $("#selectCliente").append(
+                  `<option value="${idCliente}">${nombre}`
+                );
+              });
+
+            $("#selectCliente").change(function () {
+              var idA = parseInt($(this).val());
+              $("#contenido").empty();
+              $(data)
+                .find("CLIENTE")
+                .each(function () {
+                  if (idA === parseInt($(this).attr("IDCLIENTE"))) {
+                    var direccion = $(this).find("DIRECCION").first().text();
+                    var email = $(this).find("EMAIL").first().text();
+                    var codigoPostal = $(this)
+                      .find("CODIGOPOSTAL")
+                      .first()
+                      .text();
+                    var paginaWeb = $(this).find("PAGINAWEB").first().text();
+                    var imagenCliente = $(this)
+                      .find("IMAGENCLIENTE")
+                      .first()
+                      .text();
+                    $("#contenido").append(`<p>Dirección: ${direccion}</p>`);
+                    $("#contenido").append(`<p>Email: ${email}</p>`);
+                    $("#contenido").append(
+                      `<p>Código Postal: ${codigoPostal}</p>`
+                    );
+                    $("#contenido").append(`<p>Página Web: ${paginaWeb}</p>`);
+                    $("#contenido").append(`<img src="${imagenCliente}" />`);
+                  }
+                });
+            });
+          }
+        );
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        width: 300px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Servicio coches</h1>
+    <label>Seleccione un coche</label>
+    <select id="selectCoche"></select>
+    <div id="contenedor"></div>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $.get(
+          "https://apiclientesxml.azurewebsites.net/api/Clientes/GetCochesXML",
+          function (data) {
+            $(data)
+              .find("coche")
+              .each(function () {
+                var id = $(this).attr("idcoche");
+                var marca = $(this).find("marca").text();
+                var modelo = $(this).find("modelo").text();
+                $("#selectCoche").append(
+                  `<option value="${id}">${marca} ${modelo}</option>`
+                );
+              });
+
+            $("#selectCoche").change(function () {
+              $("#contenedor").empty();
+              var id = parseInt($(this).val());
+              $(data)
+                .find("coche")
+                .each(function () {
+                  if (id === parseInt($(this).attr("idcoche"))) {
+                    var imagen = $(this).find("imagen").text();
+                    $("#contenedor").append(`<img src="${imagen}"/>`);
+                  }
+                });
+            });
+          }
+        );
+      });
+    </script>
+  </body>
+</html>
